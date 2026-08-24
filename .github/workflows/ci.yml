@@ -1,4 +1,4 @@
-name: CI
+name: Pipeline de Qualidade
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
   pull_request:
 
 jobs:
-  test:
+  teste:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Obter código
+      - name: Baixar código do repositório
         uses: actions/checkout@v4
 
-      - name: Configurar Python
+      - name: Configurar ambiente Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -22,10 +22,10 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
-      - name: Executar testes
+      - name: Executar testes automatizados
         run: pytest
 
-      - name: Criar artefato
+      - name: Criar artefato aprovado
         if: success() && github.ref == 'refs/heads/main'
         run: |
           mkdir artefato
