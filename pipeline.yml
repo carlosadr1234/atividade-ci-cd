@@ -52,6 +52,24 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: calculadora-aprovada
+          path: pacote/    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Gerar artefato
+        run: |
+          mkdir pacote
+          cp calculadora.py pacote/
+          cp test_calculadora.py pacote/
+          cp requirements.txt pacote/
+          cp README.md pacote/
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculadora-aprovada
           path: pacote/        with:
           name: projeto-aprovado
           path: artefato/
