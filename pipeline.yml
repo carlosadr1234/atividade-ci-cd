@@ -5,35 +5,53 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-  teste:
+  ci:
+    name: Continuous Integration
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar código do repositório
+      - name: Baixar código
         uses: actions/checkout@v4
 
-      - name: Configurar ambiente Python
+      - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Instalar dependências
-        run: pip install -r requirements.txt
-
-      - name: Executar testes automatizados
-        run: pytest
-
-      - name: Criar artefato aprovado
-        if: success() && github.ref == 'refs/heads/main'
         run: |
-          mkdir artefato
-          cp app.py artefato/
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Enviar artefato
-        if: success() && github.ref == 'refs/heads/main'
+      - name: Executar testes
+        run: |
+          pytest -v
+
+  delivery:
+    name: Continuous Delivery
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Gerar artefato
+        run: |
+          mkdir pacote
+          cp calculadora.py pacote/
+          cp test_calculadora.py pacote/
+          cp requirements.txt pacote/
+          cp README.md pacote/
+
+      - name: Publicar artefato
         uses: actions/upload-artifact@v4
         with:
+          name: calculadora-aprovada
+          path: pacote/        with:
           name: projeto-aprovado
           path: artefato/
