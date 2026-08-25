@@ -99,7 +99,9 @@ def test_calculo_expressao():
 
 def test_operador_invalido():
     with pytest.raises(ValueError):
-        calculo_expressao(10, "%", 5) if n < 0 or not n.is_integer():
+        if n < 0 or not n.is_integer():
+    calculo_expressao(10, "%", 5)
+
         raise ValueError("O fatorial deve ser de um número inteiro não negativo.")
     return math.factorial(int(n))
 
